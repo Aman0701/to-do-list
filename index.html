@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="todo.css">
+</head>
+
+<body>
+    <div id="main">
+        <div id="input"><i class="fa-regular fa-file fa-lg" id="text"></i>
+            <input type="text" id="search" placeholder="Type your todo list..." onkeyup="searchFunction()">
+            <i class="fa-solid fa-circle-plus fa-lg" id="add"></i>
+        </div>
+            
+        <div id="show-task">
+            <p><i class="fa-solid fa-check-double"></i> &nbsp; &nbsp;complete all tasks</p>
+            <p id="clear">Clear completed</p>
+        </div>
+        <hr>
+        <div id="tasks">
+            
+        </div>
+        <hr>
+        <div id="footer"> 
+            <div id="remaining-task">
+                <p> 0 tasks left</p>
+            </div>
+            <div id="footer-status">
+                <p id="all">All</p>
+                <p id="incomplete">Uncomplete</p>
+                <p id="complete">Completed</p>
+            </div>
+        </div>
+    </div>
+    <script src="https://kit.fontawesome.com/8ec9d4b7e0.js" crossorigin="anonymous"></script>
+    <script src="todo.js"></script>
+</body>
+
+</html>
