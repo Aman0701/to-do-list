@@ -3,10 +3,11 @@ let len = 0;
 const input = document.getElementById('search');
 const add = document.getElementById('add');
 const allTasks = document.getElementById('tasks');
-/* <i class="fa-solid fa-circle-xmark fa-lg" id="cancle"></i> */
 
+/**
+ * Searches for tasks based on user input and displays the add button accordingly.
+ */
 function searchFunction() {
-
     if (input.value.trim() == "" || input.value.trim() == null || input.value.trim() == undefined) {
         add.style.display = 'none';
     } else {
@@ -14,8 +15,12 @@ function searchFunction() {
     }
 }
 
+/**
+ * Adds a new task to the list.
+ * 
+ * Example: addtoTask() // adds a new task with the input value
+ */
 function addtoTask() {
-
     const div = document.createElement('div');
     div.id = len;
     div.classList.add('round');
@@ -61,20 +66,16 @@ function addtoTask() {
             taskleft();
         }
     });
-
     div.addEventListener('mouseenter', () => {
         cancle.style.display = "block";
     });
     div.addEventListener('mouseleave', () => {
-
         cancle.style.display = "none";
     });
-
     cancle.addEventListener("click", () => {
         const ind = tasks.findIndex(element => {
             return element.id == div.id;
         });
-
         allTasks.removeChild(div);
         if (tasks[ind].status == 'incomplete') {
             len--;
@@ -82,13 +83,10 @@ function addtoTask() {
         }
         tasks.splice(ind, 1);
     });
-
-
 }
 
 input.addEventListener('keypress', () => {
     if (event.key === 'Enter') {
-
         if (input.value.trim() == "" || input.value.trim() == null || input.value.trim() == undefined) {
             input.value = "";
             return;
@@ -105,9 +103,13 @@ add.addEventListener('click', () => {
     } else {
         addtoTask();
     }
-
 });
 
+/**
+ * Updates the task count display.
+ * 
+ * Example: taskleft() // updates the task count display
+ */
 function taskleft() {
     const lefttask = document.getElementById('remaining-task');
     lefttask.innerText = `${len} tasks left`;
@@ -129,21 +131,30 @@ clear.addEventListener('click', () => {
     });
 });
 
+/**
+ * Displays all tasks.
+ * 
+ * Example: all.click() // displays all tasks
+ */
 const all = document.getElementById('all');
-all.addEventListener('click',() =>{
+all.addEventListener('click',()=>{
     tasks.forEach(task =>{
         let div = document.getElementById(task.id);
         div.style.display = 'block';
     });
 });
 
+/**
+ * Displays only incomplete tasks.
+ * 
+ * Example: incomplete.click() // displays only incomplete tasks
+ */
 const incomplete = document.getElementById('incomplete');
-incomplete.addEventListener('click',() =>{
+incomplete.addEventListener('click',()=>{
     let alldiv = document.createElement('div');
     tasks.forEach(task =>{
         let div = document.getElementById(task.id);
         if(task.status == 'completed'){
-            
             div.style.display = 'none';
         }else{
             div.style.display = 'block';
@@ -151,13 +162,17 @@ incomplete.addEventListener('click',() =>{
     });
 });
 
+/**
+ * Displays only completed tasks.
+ * 
+ * Example: complete.click() // displays only completed tasks
+ */
 const complete = document.getElementById('complete');
-complete.addEventListener('click',() =>{
+complete.addEventListener('click',()=>{
     let alldiv = document.createElement('div');
     tasks.forEach(task =>{
         let div = document.getElementById(task.id);
         if(task.status == 'incomplete'){
-            
             div.style.display = 'none';
         }else{
             div.style.display = 'block';
