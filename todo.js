@@ -1,5 +1,6 @@
 const tasks = [];
 let len = 0;
+let id = 1;
 const input = document.getElementById('search');
 const add = document.getElementById('add');
 const allTasks = document.getElementById('tasks');
@@ -22,7 +23,8 @@ function searchFunction() {
  */
 function addtoTask() {
     const div = document.createElement('div');
-    div.id = len;
+    div.id = id;
+    id++;
     div.classList.add('round');
     const checkbox = document.createElement('input');
     checkbox.id = `checkbox${len}`;
@@ -47,6 +49,7 @@ function addtoTask() {
     tasks.push(task);
     taskleft();
     checkbox.addEventListener('change', () => {
+        console.log("aman");
         const ind = tasks.findIndex(element => {
             return element.id == div.id;
         });
