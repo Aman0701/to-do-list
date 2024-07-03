@@ -1,218 +1,184 @@
-/* 
- * Global Styles
- */
+const tasks = [];
+let len = 0;
+let id = 1;
+const input = document.getElementById('search');
+const add = document.getElementById('add');
+const allTasks = document.getElementById('tasks');
 
-/* 
- * Body styles
- * 
- * Sets the margin, padding, background color, and display properties for the body element.
+/**
+ * Searches for tasks based on user input and displays the add button accordingly.
  */
- body {
-    margin: 0;
-    padding: 10%;
-    background-color: #d3d4de;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+function searchFunction() {
+    if (input.value.trim() == "" || input.value.trim() == null || input.value.trim() == undefined) {
+        add.style.display = 'none';
+    } else {
+        add.style.display = 'block';
+    }
 }
 
-/* 
- * Main container styles
+/**
+ * Adds a new task to the list.
  * 
- * Sets the background color, box shadow, border radius, width, display, and padding properties for the main container element.
+ * Example: addtoTask() // adds a new task with the input value
  */
-#main {
-    background-color: white;
-    box-shadow: 2px 2px 10px 2px;
-    border-radius: 10px;
-    width: 40vw;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 1%;
-    height: auto;
+function addtoTask() {
+    const div = document.createElement('div');
+    div.id = id;
+    id++;
+    div.classList.add('round');
+    const checkbox = document.createElement('input');
+    checkbox.id = `checkbox${len}`;
+    checkbox.setAttribute('type', 'checkbox');
+    const label = document.createElement('label');
+    label.htmlFor = `checkbox${len}`;
+    const span = document.createElement('span');
+    span.innerText = input.value;
+    const cancle = document.createElement('i');
+    cancle.id = "cancle"
+    const classesToAdd = ['fa-solid', 'fa-circle-xmark', 'fa-lg']
+    cancle.classList.add(...classesToAdd);
+    cancle.style.display = "none";
+    const task = { id: div.id, name: input.value, status: 'incomplete' };
+    div.appendChild(checkbox);
+    div.appendChild(label);
+    div.appendChild(span);
+    div.appendChild(cancle);
+    allTasks.appendChild(div);
+    input.value = "";
+    len++; 
+    tasks.push(task);
+    taskleft();
+    checkbox.addEventListener('change', () => {
+        console.log("aman");
+        const ind = tasks.findIndex(element => {
+            return element.id == div.id;
+        });
+        if (event.target.checked) {
+            div.style.boxShadow = "none";
+            div.style.backgroundColor = "#d3d4de";
+            span.style.textDecoration = "line-through";
+            len--;
+            tasks[ind].status = 'completed';
+            taskleft();
+        } else {
+            div.style.boxShadow = "1px 1px 5px 1px";
+            div.style.backgroundColor = "white";
+            span.style.textDecoration = "none";
+            len++;
+            tasks[ind].status = 'incomplete';
+            taskleft();
+        }
+    });
+    div.addEventListener('mouseenter', () => {
+        cancle.style.display = "block";
+    });
+    div.addEventListener('mouseleave', () => {
+        cancle.style.display = "none";
+    });
+    cancle.addEventListener("click", () => {
+        const ind = tasks.findIndex(element => {
+            return element.id == div.id;
+        });
+        allTasks.removeChild(div);
+        if (tasks[ind].status == 'incomplete') {
+            len--;
+            taskleft();
+        }
+        tasks.splice(ind, 1);
+    });
 }
 
-/* 
- * Input field styles
+input.addEventListener('keypress', () => {
+    if (event.key === 'Enter') {
+        if (input.value.trim() == "" || input.value.trim() == null || input.value.trim() == undefined) {
+            input.value = "";
+            return;
+        } else {
+            addtoTask();
+        }
+    }
+});
+
+add.addEventListener('click', () => {
+    if (input.value.trim() == "" || input.value.trim() == null || input.value.trim() == undefined) {
+        input.value = "";
+        return;
+    } else {
+        addtoTask();
+    }
+});
+
+/**
+ * Updates the task count display.
  * 
- * Sets the position, width, and other properties for the input field element.
+ * Example: taskleft() // updates the task count display
  */
-#input {
-    position: relative;
-    width: 100%;
+function taskleft() {
+    const lefttask = document.getElementById('remaining-task');
+    lefttask.innerText = `${len} tasks left`;
 }
 
-/* 
- * Text styles
- * 
- * Sets the position, top, and left properties for the text element.
- */
-#text {
-    position: absolute;
-    top: 28px;
-    left: 15px;
-}
+const clear = document.getElementById('clear');
+clear.addEventListener('click', () => {
+    const complete = tasks.filter((task) => {
+        if(task.status == 'completed'){
+            allTasks.removeChild(document.getElementById(task.id));
+            return task
+        }    
+    });
+    complete.forEach(task => {
+        let ind = tasks.findIndex(ind =>{
+            return task.id == ind.id;
+        });
+        tasks.splice(ind,1);
+    });
+});
 
-/* 
- * Search input styles
+/**
+ * Displays all tasks.
  * 
- * Sets the box sizing, width, height, background color, border radius, border, font size, and padding properties for the search input element.
+ * Example: all.click() // displays all tasks
  */
-#search {
-    box-sizing: border-box;
-    width: 100%;
-    height: 7vh;
-    background-color: #d3d4de;
-    border-radius: 5px;
-    border: none;
-    font-size: 1.5rem;
-    padding-left: 40px;
-    padding-right: 40px;
-}
+const all = document.getElementById('all');
+all.addEventListener('click',()=>{
+    tasks.forEach(task =>{
+        let div = document.getElementById(task.id);
+        div.style.display = 'block';
+    });
+});
 
-/* 
- * Input placeholder styles
+/**
+ * Displays only incomplete tasks.
  * 
- * Sets the opacity for the input placeholder.
+ * Example: incomplete.click() // displays only incomplete tasks
  */
-input::placeholder {
-    opacity: 0.4;
-}
+const incomplete = document.getElementById('incomplete');
+incomplete.addEventListener('click',()=>{
+    let alldiv = document.createElement('div');
+    tasks.forEach(task =>{
+        let div = document.getElementById(task.id);
+        if(task.status == 'completed'){
+            div.style.display = 'none';
+        }else{
+            div.style.display = 'block';
+        }
+    });
+});
 
-/* 
- * Input focus styles
+/**
+ * Displays only completed tasks.
  * 
- * Sets the outline property for the input element when focused.
+ * Example: complete.click() // displays only completed tasks
  */
-input:focus {
-    outline: none;
-}
-
-/* 
- * Show task styles
- * 
- * Sets the width, display, and justify content properties for the show task element.
- */
-#show-task {
-    width: 95%;
-    display: flex;
-    justify-content: space-between;
-    color: #c0c7c4;
-}
-
-/* 
- * Horizontal rule styles
- * 
- * Sets the width and opacity properties for the horizontal rule element.
- */
-hr {
-    width: 95%;
-    opacity: 0.15;
-}
-
-/* 
- * Footer styles
- * 
- * Sets the display, flex wrap, justify content, and width properties for the footer element.
- */
-#footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 95%;
-}
-
-/* 
- * Remaining task styles
- * 
- * Sets the color property for the remaining task element.
- */
-#remaining-task {
-    color: #c0c7c4;
-}
-
-/* 
- * Footer status styles
- * 
- * Sets the display, width, justify content, and color properties for the footer status element.
- */
-#footer-status {
-    display: flex;
-    width: 30%;
-    justify-content: space-between;
-    color: #c0c7c4;
-}
-
-/* 
- * Add button styles
- * 
- * Sets the position, top, and left properties for the add button element.
- */
-#add {
-    position: absolute;
-    top: 28px;
-    left: 95%;
-    display: none;
-}
-
-/* 
- * Cancel button styles
- * 
- * Sets the position and left properties for the cancel button element.
- */
-#cancle {
-    position: absolute;
-    left: 95%;
-}
-
-/* 
- * Tasks container styles
- * 
- * Sets the position, display, flex wrap, justify content, and width properties for the tasks container element.
- */
-#tasks {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    width: 95%;
-    align-items: center;
-}
-
-/* 
- * Round task styles
- * 
- * Sets the display, flex wrap, align items, width, height, margin bottom, and box shadow properties for the round task element.
- */
-.round {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    width: 100%;
-    height: 55px;
-    margin-bottom: 10px;
-    box-shadow: 1px 1px 5px 1px;
-}
-
-/* 
- * Round task span styles
- * 
- * Sets the font size and margin left properties for the round task span element.
- */
-.round span {
-    font-size: 1.5rem;
-    margin-left: 20px;
-}
-
-/* 
- * Checkbox styles
- * 
- * Sets the width, height, border radius, and border properties for the checkbox element.
- */
-#checkbox {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1px solid black;
-}
+const complete = document.getElementById('complete');
+complete.addEventListener('click',()=>{
+    let alldiv = document.createElement('div');
+    tasks.forEach(task =>{
+        let div = document.getElementById(task.id);
+        if(task.status == 'incomplete'){
+            div.style.display = 'none';
+        }else{
+            div.style.display = 'block';
+        }
+    });
+});
