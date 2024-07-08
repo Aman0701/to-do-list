@@ -104,6 +104,7 @@ add.addEventListener('click', () => {
         input.value = "";
         return;
     } else {
+        add.style.display = 'none';
         addtoTask();
     }
 });
